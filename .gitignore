@@ -1,0 +1,21 @@
+# C++ 编译产物
+OBJ-GSP/build/
+.cache/
+
+# Python & 深度学习产物
+__pycache__/
+*.pyc
+*.pth
+*.pt
+
+# 屏蔽大体积图片和数据集
+*.jpg
+*.png
+*.jpeg
+input-data/
+datasets/
+
+# 屏蔽临时文件
+*.txt
+!CMakeLists.txt
+!requirements.txt
