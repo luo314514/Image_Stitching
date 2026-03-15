@@ -7,22 +7,19 @@ MultiImages::MultiImages(const string& _file_name,
 	const vector<cv::Point2f>& _custom_pts2) : 
 	parameter(_file_name), custom_pts1(_custom_pts1), custom_pts2(_custom_pts2) {
 
-	string my_folder = "input-data/my_work/";
-    // 【强制顺序】：手动指定顺序，防止路径找不到
-    vector<string> forced_names = {"building_A.jpg", "building_B.jpg"};
-
-	for (int i = 0; i < (int)forced_names.size(); ++i) {
-		string real_path = my_folder + forced_names[i];
-		cout << ">>> [厂长强制对齐] 序号 " << i << ": [" << real_path << "]" << endl;
+	// 【回归原版动态读取】：抛弃硬编码，直接读取 Parameter 解析出的正确路径
+	for (int i = 0; i < parameter.image_file_full_names.size(); ++i) {
+		string real_path = parameter.file_dir + parameter.image_file_full_names[i];
+		cout << ">>> [厂长动态读取] 准备加载图片: [" << real_path << "]" << endl;
 
 #ifndef DP_NO_LOG
-		images_data.emplace_back("", real_path, _width_filter, _length_filter, &parameter.debug_dir);
+		images_data.emplace_back(parameter.file_dir, parameter.image_file_full_names[i], _width_filter, _length_filter, &parameter.debug_dir);
 #else
-		images_data.emplace_back("", real_path, _width_filter, _length_filter);
+		images_data.emplace_back(parameter.file_dir, parameter.image_file_full_names[i], _width_filter, _length_filter);
 #endif
 
 		if (images_data.back().img.empty()) {
-			cerr << "!!! [报错] 图片加载失败: " << real_path << endl;
+			cerr << "!!! [报错] 图片加载失败，请检查路径: " << real_path << endl;
 		} else {
 			cout << ">>> [读取成功] 图片尺寸: " << images_data.back().img.cols << "x" << images_data.back().img.rows << endl;
 		}
